@@ -7,8 +7,7 @@ function clock(){
         time.textContent = "Time: " + timeLeft;
         timeLeft--;
 
-        if(timeLeft < 0){
-            console.log('You suck');
+        if(timeLeft <= 0){
             time.textContent = 'Time: 0';
         }
 
@@ -23,65 +22,90 @@ var btns     = {
     btn4: document.getElementById('btn4'),
 };
 
+var quiz = [
+    {   question: 'A useful tool for debugging is ___',
+        answers: ['Document', 'For', 'Console.log', 'Answer 1'],
+        answer: 'Console.log'
+    },
+    {
+        question: 'Which answer is not a type of value in javascript',
+        answers: ['String', 'Boolean', 'Number', 'HTML'],
+        answer: 'HTML'
+    },
+    {
+        question: 'In HTML what goes to the bottom of the document',
+        answers: ['Header', 'Head', 'Body', 'Footer'],
+        answer: 'Footer'
+    },
+    {
+        question: 'In CSS which special character is for a ID',
+        answers: ['$', '*','.', '#'],
+        answer: '#'
+    },
+    {
+        question: 'H1 H2 H3 H4 H5 ____',
+        answers: ['Div', 'p', 'H6', 'H5'],
+        answer: 'H6'
+    }
+];
+
+
+var random;
+var score  = 0;
+
 var hidden   = document.querySelector('div section');
 var question = document.querySelector('div p');
-
-var questions = ['A useful tool for debugging is ___', 'Which answer is not a type of value in javascript',
-'In HTML what goes to the bottom of the document', 'In CSS which special character is for a ID', 'H1 H2 H3 H4 H5 ___'];
-var quesQueue = questions.slice(0,questions.length);
-//if array is hit for a certain question
-//certain answers will display
-var answerScript = ['String', 'Boolean', 'Number', 'HTML'];
-var answerHTML   = ['Header', 'Head', 'Body', 'Footer'];
-var answerCSS    = ['$', '*','.', '#'];
-var answerHead   = ['Div', 'p', 'h6', 'H5'];
-var answerDe     = ['Document', 'For', 'Console.log', 'Answer 1'];
+var fun      = document.getElementById('fun');
 
 
 function start(){
-    hidden.classList -= 'hide';
-    sBtn.classList   += 'hide';
+    var loop = 0;
+    random   = Math.floor(Math.random() * quiz.length);
 
-    var random = Math.floor(Math.random() * questions.length);
-    var loop   = 0;
-
-    //you need to remove the question from the questions array so it wont be repeated
-    question.textContent = questions[random];
-    question.className += 'question';
-    questions.splice(random, 1);
+    if(quiz.length <= 0){
+        question.textContent = "You've answered all the questions! Your score is: " + score;
+    }
+    else{
+        question.textContent = quiz[random].question;
+    }
 
     Object.values(btns).forEach(val => {
-        if(questions[random] == quesQueue[0]){
-            val.textContent = answerScript[loop];
-        }
-        else if(questions[random] == quesQueue[1]){
-            val.textContent = answerHTML[loop];
-        }
-        else if(questions[random] == quesQueue[2]){
-            val.textContent = answerCSS[loop];
-        }
-        else if(questions[random] == quesQueue[3]){
-            val.textContent = answerHead[loop];
-        }
-        else if(questions[random] == quesQueue[4]){
-            val.textContent = answerDe[loop];
-        }
-
+        val.textContent = quiz[random].answers[loop];
         loop++;
     });
-
-
-
-    clock();
 }
 
 sBtn.addEventListener('click', (e) =>{
     e.preventDefault();
+
+    question.className += 'question';
+    hidden.classList -= 'hide';
+    sBtn.classList   += 'hide';
+
+    clock();
     start();
 });
 
 Object.values(btns).forEach(val => {
     val.addEventListener('click', (e) => {
-        console.log(val.textContent);
+        e.preventDefault();
+
+        if(quiz[random].answer == val.textContent){
+            quiz.splice(random,1);
+
+            score++;
+            fun.textContent = 'Correct';
+            fun.classList   = 'correct';
+
+            start();
+        }
+        else{
+            quiz.splice(random,1);
+
+            fun.textContent = 'Wrong';
+            timeLeft -= 5;
+
+            start();
+        }
     });
 });
