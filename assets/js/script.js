@@ -92,9 +92,9 @@ function clock(){
         if(timeLeft < 0){
             time.textContent = 'Time: 0';
             clearInterval(timer);
+            noTime();
         }
         else if(timeLeft < 0 && quiz.length == 0){
-            noTime();
             clearInterval(timer);
         }
 
