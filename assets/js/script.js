@@ -69,7 +69,6 @@ function start(){
     if(quiz.length <= 0){
         question.textContent = "You've answered all the questions! Your score is: " + score;
         hidden.classList.add('hide'); 
-        timeLeft = 0;
 
         setTimeout(() => {
             form.classList.remove('hide');
