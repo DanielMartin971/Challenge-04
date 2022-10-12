@@ -1,14 +1,16 @@
 
-var time  = document.getElementById('time');
+var time     = document.getElementById('time');
 var timeLeft = 60;
 
 function clock(){
-    setInterval(() => {
+    var timer = setInterval(() => {
         time.textContent = "Time: " + timeLeft;
         timeLeft--;
 
-        if(timeLeft <= 0){
+        if(timeLeft < 0){
             time.textContent = 'Time: 0';
+            noTime();
+            clearInterval(timer);
         }
 
     }, 1000);
@@ -48,14 +50,30 @@ var quiz = [
         answer: 'H6'
     }
 ];
+var qReset     = quiz.slice(0);
+var highScores = [];
 
 
 var random;
 var score  = 0;
 
+var header   = document.querySelector('#header');
 var hidden   = document.querySelector('div section');
 var question = document.querySelector('div p');
 var fun      = document.getElementById('fun');
+var form     = document.querySelector('form');
+var input    = document.getElementById('input');
+var submit   = document.getElementById('submit');
+var viewScor = document.querySelector('header a');
+
+let button  = document.createElement('button');
+let button2 = document.createElement('button');
+let display = document.createElement('p');
+
+
+button.textContent  = 'Play Again?';
+button2.textContent = 'Clear HighScores?';
+
 
 
 function start(){
@@ -64,23 +82,34 @@ function start(){
 
     if(quiz.length <= 0){
         question.textContent = "You've answered all the questions! Your score is: " + score;
+        hidden.classList.add('hide'); 
+        timeLeft = 0;
+
+        setTimeout(() => {
+            form.classList.remove('hide');
+        }, 1500);
     }
     else{
+        Object.values(btns).forEach(val => {
+            val.textContent = quiz[random].answers[loop];
+            loop++;
+        });
+
         question.textContent = quiz[random].question;
     }
+}
 
-    Object.values(btns).forEach(val => {
-        val.textContent = quiz[random].answers[loop];
-        loop++;
-    });
+function noTime(){
+    question.textContent = "You've ran out of time!";
+    hidden.classList.add('hide');
 }
 
 sBtn.addEventListener('click', (e) =>{
     e.preventDefault();
 
-    question.className += 'question';
-    hidden.classList -= 'hide';
-    sBtn.classList   += 'hide';
+    question.classList.add('question');
+    hidden.classList.remove('hide');
+    sBtn.classList.add('hide');
 
     clock();
     start();
@@ -89,13 +118,16 @@ sBtn.addEventListener('click', (e) =>{
 Object.values(btns).forEach(val => {
     val.addEventListener('click', (e) => {
         e.preventDefault();
+        fun.classList.add('correct');
 
         if(quiz[random].answer == val.textContent){
             quiz.splice(random,1);
 
             score++;
             fun.textContent = 'Correct';
-            fun.classList   = 'correct';
+            setTimeout(() => {
+                fun.textContent = '';
+            }, 5000);
 
             start();
         }
@@ -105,7 +137,76 @@ Object.values(btns).forEach(val => {
             fun.textContent = 'Wrong';
             timeLeft -= 5;
 
+            setTimeout(() => {
+                fun.textContent = '';
+            }, 5000);
+
             start();
         }
     });
+});
+
+submit.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    highScores.push(input.value + ' - ' + score);
+    display.textContent = highScores;
+
+    header.textContent = 'High Scores';
+    form.classList.add('hide');
+
+    question.appendChild(button);
+    question.appendChild(button2);
+    header.appendChild(display);
+
+});
+
+button.addEventListener('click', (e) => {
+    e.preventDefault();
+    quiz = qReset.slice(0);
+    hidden.classList.remove('hide');
+
+    header.removeChild(display);
+
+    timeLeft = 60;
+    score    = 0;
+    input.value = '';
+
+    clock();
+    start();
+});
+
+button2.addEventListener('click', (e) => {
+    e.preventDefault();
+    highScores.splice(0, highScores.length);
+    question.textContent = '';
+
+    question.appendChild(button);
+    question.appendChild(button2);
+});
+
+viewScor.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    if(display.textContent == ''){
+        display.textContent = 'There are no high scores!';
+    }
+    else{
+        display.textContent = highScores;
+    }
+
+    question.textContent = '';
+    timeLeft = 0;
+
+    hidden.classList.add('hide');
+    sBtn.classList.add('hide');
+    form.classList.add('hide');
+
+    header.textContent  = 'High Scores';
+    button.textContent  = 'Play Again?';
+    button2.textContent = 'Clear HighScores?';
+
+    header.appendChild(display);
+    question.appendChild(button);
+    question.appendChild(button2);
 });
