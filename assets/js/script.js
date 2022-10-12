@@ -94,6 +94,10 @@ function clock(){
             clearInterval(timer);
             noTime();
         }
+        else if(quiz.length === 0){
+            clearInterval(timer);
+            time.textContent = 'Time: 0';
+        }
         else if(timeLeft < 0 && quiz.length == 0){
             clearInterval(timer);
         }
@@ -156,6 +160,8 @@ submit.addEventListener('click', (e) => {
 
     header.textContent = 'High Scores';
     form.classList.add('hide');
+
+    question.textContent = '';
 
     question.appendChild(button);
     question.appendChild(button2);
