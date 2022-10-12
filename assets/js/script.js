@@ -2,20 +2,6 @@
 var time     = document.getElementById('time');
 var timeLeft = 60;
 
-function clock(){
-    var timer = setInterval(() => {
-        time.textContent = "Time: " + timeLeft;
-        timeLeft--;
-
-        if(timeLeft < 0){
-            time.textContent = 'Time: 0';
-            noTime();
-            clearInterval(timer);
-        }
-
-    }, 1000);
-}
-
 var sBtn     = document.getElementById('s-btn');
 var btns     = {
     btn1: document.getElementById('btn1'),
@@ -97,6 +83,23 @@ function start(){
 
         question.textContent = quiz[random].question;
     }
+}
+
+function clock(){
+    var timer = setInterval(() => {
+        time.textContent = "Time: " + timeLeft;
+        timeLeft--;
+
+        if(timeLeft < 0){
+            time.textContent = 'Time: 0';
+            clearInterval(timer);
+        }
+        else if(timeLeft < 0 && quiz.length == 0){
+            noTime();
+            clearInterval(timer);
+        }
+
+    }, 1000);
 }
 
 function noTime(){
