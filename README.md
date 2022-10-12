@@ -6,7 +6,7 @@ This is the 4th project given to us during the coding bootcamp. The quiz was exp
 
 ## Installation
 
-Started with no code and made from scratch.
+Started with no code and made from scratch. The way to use it, is by using the URL and then playing the coding quiz game to test your knowledge!
 
 ## Usage
 
